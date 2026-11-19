@@ -35,10 +35,10 @@ struct SymbolSearchView: View {
                     ContentUnavailableView(
                         "シンボルを検索",
                         systemImage: "magnifyingglass",
-                        description: Text("シンボル名を入力してください")
+                        description: Text("シンボル名を入力するか、カテゴリを選んでください")
                     )
                 } else if symbols.isEmpty {
-                    ContentUnavailableView.search(text: query)
+                    emptyResultView
                 }
             }
             .navigationTitle("検索")
@@ -49,12 +49,34 @@ struct SymbolSearchView: View {
             }
     }
 
+    /// 0件のときの表示（フィルター中はカテゴリ名と解除ボタンを出す）
+    @ViewBuilder
+    private var emptyResultView: some View {
+        if let category = selectedCategory {
+            ContentUnavailableView {
+                Label("見つかりません", systemImage: "magnifyingglass")
+            } description: {
+                Text("「\(category.japaneseName)」に「\(query)」を含むシンボルはありません")
+            } actions: {
+                Button("フィルターを解除") {
+                    selectedCategory = nil
+                }
+                .buttonStyle(.bordered)
+            }
+        } else {
+            ContentUnavailableView.search(text: query)
+        }
+    }
+
     /// カテゴリを1つ選ぶメニュー（選択中はアイコンを塗りつぶしにする）
     private var categoryFilterMenu: some View {
         Menu {
+            if selectedCategory != nil {
+                Button("フィルターを解除", systemImage: "xmark.circle", role: .destructive) {
+                    selectedCategory = nil
+                }
+            }
             Picker("カテゴリ", selection: $selectedCategory) {
-                Text("指定なし")
-                    .tag(SymbolCategory?.none)
                 ForEach(categories) { category in
                     Label(category.japaneseName, systemImage: category.icon)
                         .tag(Optional(category))
