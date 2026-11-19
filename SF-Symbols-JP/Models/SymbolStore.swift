@@ -8,6 +8,11 @@ struct SymbolStore {
         let categories: [SymbolCategory]
     }
 
+    /// 全シンボル（"all" カテゴリの並び順）
+    var allSymbols: [String] {
+        categories.first { $0.key == "all" }?.symbols ?? []
+    }
+
     init(categories: [SymbolCategory]) {
         self.categories = categories
     }

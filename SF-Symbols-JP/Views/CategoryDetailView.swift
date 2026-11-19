@@ -6,8 +6,6 @@ struct CategoryDetailView: View {
 
     @State private var searchText = ""
 
-    private let columns = [GridItem(.adaptive(minimum: 96), spacing: 12)]
-
     private var filteredSymbols: [String] {
         let query = searchText.trimmingCharacters(in: .whitespaces)
         guard !query.isEmpty else { return category.symbols }
@@ -17,47 +15,15 @@ struct CategoryDetailView: View {
     var body: some View {
         let symbols = filteredSymbols
 
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(symbols, id: \.self) { name in
-                    NavigationLink(value: SymbolName(name: name)) {
-                        SymbolCell(name: name)
-                    }
-                    .buttonStyle(.plain)
+        SymbolGrid(symbols: symbols)
+            .overlay {
+                if symbols.isEmpty {
+                    ContentUnavailableView.search(text: searchText)
                 }
             }
-            .padding()
-        }
-        .overlay {
-            if symbols.isEmpty {
-                ContentUnavailableView.search(text: searchText)
-            }
-        }
-        .navigationTitle(category.japaneseName)
-        .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $searchText, prompt: "シンボル名で検索")
-    }
-}
-
-/// グリッドの1セル（アイコン + 名前）
-private struct SymbolCell: View {
-    let name: String
-
-    var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: name)
-                .font(.title)
-                .frame(height: 44)
-            Text(name)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .lineLimit(2, reservesSpace: true)
-                .frame(maxWidth: .infinity)
-        }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 4)
-        .background(.fill.quaternary, in: .rect(cornerRadius: 12))
+            .navigationTitle(category.japaneseName)
+            .navigationBarTitleDisplayMode(.inline)
+            .searchable(text: $searchText, prompt: "シンボル名で検索")
     }
 }
 

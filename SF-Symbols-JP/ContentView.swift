@@ -10,25 +10,48 @@ import SwiftUI
 struct ContentView: View {
     private let result = Result { try SymbolStore.load() }
 
+    @State private var searchText = ""
+
     var body: some View {
-        NavigationStack {
-            switch result {
-            case .success(let store):
-                CategoryListView(categories: store.categories)
-                    .navigationDestination(for: SymbolCategory.self) { category in
-                        CategoryDetailView(category: category)
+        switch result {
+        case .success(let store):
+            TabView {
+                Tab("カテゴリ", systemImage: "square.grid.2x2") {
+                    NavigationStack {
+                        CategoryListView(categories: store.categories)
+                            .symbolNavigationDestinations()
                     }
-                    .navigationDestination(for: SymbolName.self) { symbol in
-                        SymbolDetailView(symbol: symbol)
+                }
+
+                Tab("検索", systemImage: "magnifyingglass", role: .search) {
+                    NavigationStack {
+                        SymbolSearchView(allSymbols: store.allSymbols, searchText: searchText)
+                            .symbolNavigationDestinations()
                     }
-            case .failure(let error):
-                ContentUnavailableView(
-                    "データを読み込めませんでした",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(error.localizedDescription)
-                )
+                }
             }
+            // TabView に付けると、検索タブ選択時にタブバー位置へ検索バーが常に表示される
+            .searchable(text: $searchText, prompt: "シンボル名で検索")
+        case .failure(let error):
+            ContentUnavailableView(
+                "データを読み込めませんでした",
+                systemImage: "exclamationmark.triangle",
+                description: Text(error.localizedDescription)
+            )
         }
+    }
+}
+
+private extension View {
+    /// 各タブの NavigationStack で共通の遷移先を登録する
+    func symbolNavigationDestinations() -> some View {
+        self
+            .navigationDestination(for: SymbolCategory.self) { category in
+                CategoryDetailView(category: category)
+            }
+            .navigationDestination(for: SymbolName.self) { symbol in
+                SymbolDetailView(symbol: symbol)
+            }
     }
 }
 
