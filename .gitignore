@@ -1,0 +1,72 @@
+# ===== macOS =====
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# ===== Xcode =====
+# ユーザー固有の設定
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# ビルド成果物
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# 古い Xcode / その他
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
+*.xcresult
+
+# ===== Swift Package Manager =====
+.build/
+.swiftpm/
+# Package.resolved はチームで依存バージョンを固定する場合はコミット推奨
+# Package.resolved
+
+# ===== CocoaPods =====
+Pods/
+
+# ===== Carthage =====
+Carthage/Build/
+Carthage/Checkouts/
+
+# ===== fastlane =====
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# ===== その他 =====
+*.swp
+*~
+.idea/
+.vscode/
