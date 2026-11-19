@@ -10,8 +10,6 @@ import SwiftUI
 struct ContentView: View {
     private let result = Result { try SymbolStore.load() }
 
-    @State private var searchText = ""
-
     var body: some View {
         switch result {
         case .success(let store):
@@ -27,15 +25,12 @@ struct ContentView: View {
                     NavigationStack {
                         SymbolSearchView(
                             allSymbols: store.allSymbols,
-                            categories: store.categories.filter { $0.key != "all" },
-                            searchText: searchText
+                            categories: store.categories.filter { $0.key != "all" }
                         )
                             .symbolNavigationDestinations()
                     }
                 }
             }
-            // TabView に付けると、検索タブ選択時にタブバー位置へ検索バーが常に表示される
-            .searchable(text: $searchText, prompt: "シンボル名で検索")
         case .failure(let error):
             ContentUnavailableView(
                 "データを読み込めませんでした",

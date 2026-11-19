@@ -6,9 +6,8 @@ struct SymbolSearchView: View {
     let allSymbols: [String]
     /// フィルターで選べるカテゴリ（"all" は含めない）
     let categories: [SymbolCategory]
-    /// 検索文字列（検索バーは TabView 側の .searchable が持つ）
-    let searchText: String
 
+    @State private var searchText = ""
     @State private var selectedCategory: SymbolCategory?
 
     private var query: String {
@@ -42,6 +41,12 @@ struct SymbolSearchView: View {
                 }
             }
             .navigationTitle("検索")
+            // 画面表示直後から検索バーを出す（スクロールで隠れないよう .always）
+            .searchable(
+                text: $searchText,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: "シンボル名で検索"
+            )
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     categoryFilterMenu
@@ -101,8 +106,7 @@ struct SymbolSearchView: View {
             categories: [
                 SymbolCategory(key: "communication", icon: "message", symbols: ["message", "phone"]),
                 SymbolCategory(key: "weather", icon: "cloud.sun", symbols: ["sun.max", "cloud", "cloud.rain"]),
-            ],
-            searchText: "cloud"
+            ]
         )
     }
 }
