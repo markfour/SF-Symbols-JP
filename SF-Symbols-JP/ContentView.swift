@@ -25,7 +25,11 @@ struct ContentView: View {
 
                 Tab("検索", systemImage: "magnifyingglass", role: .search) {
                     NavigationStack {
-                        SymbolSearchView(allSymbols: store.allSymbols, searchText: searchText)
+                        SymbolSearchView(
+                            allSymbols: store.allSymbols,
+                            categories: store.categories.filter { $0.key != "all" },
+                            searchText: searchText
+                        )
                             .symbolNavigationDestinations()
                     }
                 }
